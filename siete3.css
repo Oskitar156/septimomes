@@ -1,0 +1,83 @@
+/* =========================================================
+   SIETE 3 — pulido final: jardín de notitas, visor de fotos,
+   hub en 2 columnas y ajustes para celular. Se carga al final.
+   ========================================================= */
+
+/* ---------- base táctil ---------- */
+html,body{ max-width:100%; overflow-x:hidden; }
+#pantalla-7m,#g7-vista{ overscroll-behavior:contain; }
+#g7-vista{ height:100dvh; }
+.g7-wrap,#g7-cuerpo{ padding-left:max(10px,env(safe-area-inset-left)); padding-right:max(10px,env(safe-area-inset-right)); }
+button,[role=button]{ touch-action:manipulation; }
+:focus-visible{ outline:3px solid #ffd05a; outline-offset:2px; }
+
+/* ---------- hub: 2 columnas compactas en celular ---------- */
+@media (max-width:620px) and (min-width:340px){
+  .g7-hub{ grid-template-columns:1fr 1fr!important; gap:10px!important; }
+  .g7-card{ padding:12px 8px 12px!important; min-height:132px; justify-content:flex-start; text-align:center; }
+  .g7-card .ic{ width:52px!important; height:52px!important; font-size:28px!important; }
+  .g7-card h3{ font-size:8px!important; line-height:1.5!important; }
+  .g7-card p{ font-size:11.5px!important; }
+  .g7-card.carta{ grid-column:1/-1; min-height:0; flex-direction:row; justify-content:center; text-align:left; gap:12px; }
+}
+.g7-card:active{ transform:scale(.97)!important; }
+
+/* ---------- JARDÍN DE NOTITAS ---------- */
+.jd-vid{ height:10px; max-width:420px; margin:0 auto 14px; border-radius:99px; background:rgba(0,0,0,.4); box-shadow:inset 0 2px 5px rgba(0,0,0,.6); overflow:hidden; }
+.jd-vid i{ display:block; height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,#8fe08a,#ffd05a,#ff7fa8); box-shadow:0 0 12px #8fe08a; transition:width .8s cubic-bezier(.2,.9,.3,1); }
+.jd-bed{ position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:420px; margin:0 auto 10px; padding:22px 12px 14px; border-radius:22px; border:3px solid #7a4d22; background:
+  radial-gradient(circle at 20% 15%,rgba(255,255,255,.07) 0 2px,transparent 3px) 0 0/22px 22px,
+  linear-gradient(180deg,#6b4226,#432714); box-shadow:0 12px 28px rgba(0,0,0,.5),inset 0 3px 0 rgba(255,255,255,.18),inset 0 -6px 14px rgba(0,0,0,.4); }
+.jd-bed::before{ content:""; position:absolute; left:12px; right:12px; top:-3px; height:12px; border-radius:0 0 12px 12px; background:repeating-linear-gradient(90deg,#4fae55 0 9px,#6ccf68 9px 15px); box-shadow:0 3px 0 rgba(0,0,0,.25); }
+.jd-pot{ position:relative; aspect-ratio:1; border:0; padding:0; border-radius:50%; cursor:pointer; color:#fff; background:radial-gradient(circle at 50% 30%,#8a5a30,#3b2412); box-shadow:inset 0 3px 0 rgba(255,255,255,.2),inset 0 -5px 8px rgba(0,0,0,.5),0 5px 8px rgba(0,0,0,.45); transition:transform .2s,box-shadow .3s,filter .3s; overflow:visible; -webkit-tap-highlight-color:transparent; }
+.jd-pot:active{ transform:scale(.92); }
+.jd-em{ position:relative; z-index:2; display:flex; align-items:center; justify-content:center; width:100%; height:100%; font-size:clamp(26px,8vw,36px); line-height:1; filter:drop-shadow(0 3px 3px rgba(0,0,0,.5)); }
+.jd-n{ position:absolute; z-index:3; left:50%; bottom:-6px; transform:translateX(-50%); min-width:20px; padding:1px 6px; border-radius:99px; font:800 11px/16px 'Nunito',system-ui,sans-serif; background:#2a190d; color:#ffd8a8; border:2px solid #7a4d22; }
+.jd-ph{ position:absolute; inset:0; border-radius:50%; background:var(--ph) center/cover no-repeat; opacity:0; transform:scale(.4); transition:opacity .5s,transform .5s cubic-bezier(.2,1.4,.4,1); }
+.jd-pot.lock{ filter:grayscale(.85) brightness(.7); cursor:not-allowed; }
+.jd-pot.next{ animation:jdLat 1.2s ease-in-out infinite; box-shadow:0 0 0 3px #ffd05a,0 0 22px #ffd05a,inset 0 3px 0 rgba(255,255,255,.2),0 5px 8px rgba(0,0,0,.45); }
+.jd-pot.next .jd-em{ animation:jdBo 1s ease-in-out infinite; }
+.jd-pot.open{ box-shadow:0 0 0 3px #fff3b0,0 0 18px rgba(143,224,138,.9),0 5px 8px rgba(0,0,0,.45); }
+.jd-pot.open .jd-ph{ opacity:1; transform:none; }
+.jd-pot.open .jd-em{ position:absolute; inset:auto -6px -4px auto; width:auto; height:auto; font-size:20px; background:#fff8e0; border-radius:50%; padding:3px; box-shadow:0 2px 5px rgba(0,0,0,.5); animation:jdSway 3s ease-in-out infinite; transform-origin:50% 100%; }
+.jd-pot.open .jd-n{ display:none; }
+.jd-pot.shake{ animation:jdShake .35s; }
+@keyframes jdLat{ 50%{ transform:scale(1.07); } }
+@keyframes jdBo{ 50%{ transform:translateY(-4px); } }
+@keyframes jdSway{ 50%{ transform:rotate(10deg); } }
+@keyframes jdShake{ 25%{ transform:translateX(-5px); } 75%{ transform:translateX(5px); } }
+.jd-hint{ font:800 15px/1.3 'Nunito',system-ui,sans-serif; color:#ffd8e6; margin:6px 0 18px; text-shadow:0 1px 0 rgba(0,0,0,.4); }
+
+.jd-notes{ display:flex; flex-direction:column; gap:26px; max-width:460px; margin:0 auto; padding-top:10px; }
+.jd-card{ position:relative; text-align:left; padding:16px 14px 18px; border-radius:8px; color:#5a3a1f; background:linear-gradient(180deg,#fffaf0,#ffeeca); box-shadow:0 12px 26px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.4) inset; transform:rotate(-1.3deg); animation:jdIn .6s cubic-bezier(.2,1.3,.4,1); }
+.jd-card:nth-child(even){ transform:rotate(1.2deg); }
+@keyframes jdIn{ from{ opacity:0; transform:translateY(40px) scale(.85) rotate(-6deg); } }
+.jd-tape{ position:absolute; top:-11px; left:50%; width:84px; height:22px; margin-left:-42px; transform:rotate(-3deg); background:repeating-linear-gradient(45deg,rgba(255,127,168,.8) 0 8px,rgba(255,179,203,.8) 8px 16px); box-shadow:0 2px 5px rgba(0,0,0,.3); }
+.jd-card small{ display:block; font:800 11px/1 'Press Start 2P','Nunito',monospace; letter-spacing:.04em; color:#b4325f; margin:6px 0 10px; }
+.jd-foto{ position:relative; display:block; width:100%; padding:0; border:0; border-radius:4px; overflow:hidden; cursor:zoom-in; background:#1b0f2a; box-shadow:0 4px 12px rgba(0,0,0,.35); }
+.jd-bg{ position:absolute; inset:-14px; background-size:cover; background-position:center; filter:blur(16px) brightness(.8) saturate(1.2); }
+.jd-foto img{ position:relative; display:block; margin:0 auto; width:auto; max-width:100%; height:auto; max-height:min(62dvh,520px); object-fit:contain; transition:transform .4s; }
+.jd-foto:active img{ transform:scale(1.03); }
+.jd-foto.pib img{ padding:14px; }
+.jd-foto em{ position:absolute; right:8px; bottom:8px; font:800 11px/1 'Nunito',system-ui,sans-serif; font-style:normal; padding:5px 9px; border-radius:99px; background:rgba(20,8,40,.72); color:#fff; backdrop-filter:blur(4px); }
+.jd-pie{ font:700 25px/1.05 'Caveat',cursive; color:#b4325f; text-align:center; margin:12px 4px 4px; }
+.jd-txt{ font:600 24px/1.2 'Caveat',cursive; color:#4a2a14; padding:8px 4px 0; min-height:1.2em; white-space:pre-wrap; }
+
+/* ---------- visor de fotos ---------- */
+.jd-lb{ position:fixed; inset:0; z-index:400; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .25s; touch-action:pan-y; }
+.jd-lb.on{ opacity:1; }
+.jd-lb-bg{ position:absolute; inset:0; background:radial-gradient(circle at 50% 30%,rgba(60,24,90,.96),rgba(8,3,20,.98)); backdrop-filter:blur(8px); }
+.jd-lb figure{ position:relative; margin:0; width:100%; padding:64px 10px 40px; display:flex; flex-direction:column; align-items:center; gap:12px; pointer-events:none; }
+.jd-lb img{ max-width:100%; max-height:calc(100dvh - 190px); border:6px solid #fff; border-radius:4px; box-shadow:0 18px 50px rgba(0,0,0,.7),0 0 40px rgba(255,127,168,.35); background:#fff; opacity:0; }
+.jd-lb img.in{ animation:jdZoom .35s cubic-bezier(.2,1.2,.4,1) forwards; }
+@keyframes jdZoom{ from{ opacity:0; transform:scale(.88) translateY(14px); } to{ opacity:1; transform:none; } }
+.jd-lb figcaption{ font:700 26px/1.1 'Caveat',cursive; color:#ffe6f0; text-align:center; max-width:560px; padding:0 12px; text-shadow:0 2px 8px rgba(0,0,0,.6); }
+.jd-lb-x,.jd-lb-n{ position:absolute; z-index:3; border:0; cursor:pointer; color:#fff; background:rgba(255,255,255,.16); backdrop-filter:blur(6px); border-radius:50%; width:48px; height:48px; font:700 24px/1 system-ui,sans-serif; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.4); }
+.jd-lb-x{ top:max(12px,env(safe-area-inset-top)); right:12px; }
+.jd-lb-n{ top:50%; margin-top:-24px; font-size:34px; padding-bottom:4px; }
+.jd-lb-n.prev{ left:8px; } .jd-lb-n.next{ right:8px; }
+.jd-lb-x:active,.jd-lb-n:active{ background:rgba(255,127,168,.5); }
+.jd-lb-c{ position:absolute; left:0; right:0; bottom:max(14px,env(safe-area-inset-bottom)); text-align:center; font:800 12px 'Nunito',system-ui,sans-serif; color:#ffd05a; letter-spacing:.1em; }
+@media (max-width:480px){ .jd-lb-n{ top:auto; bottom:max(10px,env(safe-area-inset-bottom)); margin:0; } .jd-lb-n.prev{ left:18%; } .jd-lb-n.next{ right:18%; } }
+
+@media (prefers-reduced-motion:reduce){ .jd-pot,.jd-pot *,.jd-card,.jd-lb img{ animation:none!important; } }
